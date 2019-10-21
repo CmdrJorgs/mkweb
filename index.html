@@ -9,6 +9,10 @@
     <header>
         Mario Kart Tour Pipe Odds
     </header>
+    <p style = "margin-bottom: 0px"></p>
+    <h2>
+        Enter your pipe contents as shown in the shop:
+    </h2>
     <table id = "inTbl" onkeyup="edited();">
         <tr class = "tablehigh">
             <th width = 250px></th>
@@ -30,6 +34,10 @@
         <br>
         <input type = "number" id = "pulls" value = 10 onkeyup = "edited();"></input>
     </div>
+    <br>
+    <h2 id = "expectHead">
+        Expected number of rewards:
+    </h2>
     <div class = "inBunch inline">
         <p>
             See odds of exactly
@@ -48,7 +56,7 @@ var inTbl = document.getElementById("inTbl");
 var texts = ["High-End Spotlight", "High-End", "Super", "Normal"];
 
 var tbl = makeTable("chances", "Expected Number of Rewards")
-document.getElementsByClassName("inBunch")[0].insertAdjacentElement("afterend", tbl);
+document.getElementById("expectHead").insertAdjacentElement("afterend", tbl);
 tbl = makeTable("chances1", "Odds of 1 Reward");
 document.body.appendChild(tbl);
 document.getElementsByClassName("inBunch")[1].insertAdjacentElement("afterend", tbl);
@@ -146,7 +154,6 @@ for(i = 1; i < 5; i ++){
         div.appendChild(node);
         div.appendChild(textNode);
         inTbl.rows[i].cells[j].appendChild(div);
-
     }
 }
 
@@ -181,18 +188,22 @@ function edited(){
     var expected = [[0, 0, 0],[0, 0, 0],[0, 0, 0],[0, 0, 0]];
     var xfy = [];
     var pulls = Math.abs(parseInt(document.getElementById("pulls").value));
+    var sum = 0;
+    for(var j = 1; j < 5; j ++){
+        for(var k = 1; k < 4; k ++){
+            actuals[j - 1][k - 1] = parseInt(inTbl.rows[j].cells[k].childNodes[0].childNodes[0].value);
+            sum += actuals[j - 1][k - 1];
+        }
+    }
+    pulls = pulls > sum ? sum : pulls;
+    document.getElementById("pulls").value = pulls;
     var chose = Math.abs(parseInt(document.getElementById("chose").value));
     chose = chose > pulls? pulls : chose;
+    document.getElementsByClassName("inline")[0].getElementsByTagName("p")[1].textContent = "reward" + (chose != 1 ? "s" : "") + " from " + pulls + " firing" + (pulls != 1 ? "s" : "");
+    document.getElementById("chose").value = chose;
     console.log(pulls);
     for(var i = -1; i < pulls; i ++){
         xfy.push([[], [], [], []]);
-        var sum = 0;
-        for(var j = 1; j < 5; j ++){
-            for(var k = 1; k < 4; k ++){
-                actuals[j - 1][k - 1] = parseInt(inTbl.rows[j].cells[k].childNodes[0].childNodes[0].value);
-                sum += actuals[j - 1][k - 1];
-            }
-        }
         for(var j = 1; j < 5; j ++){
             for(var k = 1; k < 4; k ++){
                 var prob = getChance(i + 1, pulls, actuals[j - 1][k - 1], sum)
