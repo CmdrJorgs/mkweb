@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=1000">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <title>MK Tour Pipe Odds</title>
+</head>
+<body>
+    <header>
+        Mario Kart Tour Pipe Odds
+    </header>
+    <table id = "inTbl" onkeyup="edited();">
+        <tr class = "tablehigh">
+            <th width = 250px></th>
+            <th width = 100px>
+                <img src = "bin/driver.png" width = 50px></img>
+            </th>
+            <th width = 100px>
+                <img src = "bin/kart.png" width = 50px></img>
+            </th>
+            <th width = 100px>
+                <img src = "bin/glider.png" width = 50px></img>
+            </th>
+        </tr>
+    </table>
+    <div class = "inBunch">
+        <p>
+            How many times will you fire off the pipe?
+        </p>
+        <br>
+        <input type = "number" id = "pulls" value = 10 onkeyup = "edited();"></input>
+    </div>
+    <div class = "inBunch inline">
+        <p>
+            See odds of exactly
+        </p>
+        <br>
+        <input type = "number" id = "chose" value = 1 onkeyup = "edited();"></input>
+        <br>
+        <p>
+            rewards
+        </p>
+    </div>
+</body>
+<script>
+var inTbl = document.getElementById("inTbl");
+
+var texts = ["High-End Spotlight", "High-End", "Super", "Normal"];
+
+var tbl = makeTable("chances", "Expected Number of Rewards")
+document.getElementsByClassName("inBunch")[0].insertAdjacentElement("afterend", tbl);
+tbl = makeTable("chances1", "Odds of 1 Reward");
+document.body.appendChild(tbl);
+document.getElementsByClassName("inBunch")[1].insertAdjacentElement("afterend", tbl);
+
+for(var i = 0; i < texts.length; i ++){
+    var tr = document.createElement('tr')
+    tr.height = "60px";
+    var th = document.createElement('th');
+    th.textContent = texts[i];
+    tr.appendChild(th);
+    var td = document.createElement('td');
+    for(var j = 0; j < 3; j ++){
+        tr.appendChild(td);
+        if(j !== 2){
+            td = document.createElement('td');
+        }
+    }
+    inTbl.appendChild(tr);
+}
+
+//Don't look at me I'm hideous
+function makeTable(id, exp){
+    var tbl = document.createElement('table');
+    tbl.id = id;
+    var btr = document.createElement('tr');
+    btr.className = "tablehigh";
+    var bth1 = document.createElement('th');
+    bth1.width = "250px";
+    bth1.className = "exp";
+    bth1.textContent = exp;
+    btr.appendChild(bth1);
+    var bth2 = document.createElement('th');
+    bth2.width = "100px";
+    var img = document.createElement('img');
+    img.src = "bin/driver.png";
+    bth2.appendChild(img);
+    btr.appendChild(bth2);
+    var bth3 = document.createElement('th');
+    bth3.width = "100px";
+    var img2 = document.createElement('img');
+    img2.src = "bin/kart.png";
+    bth3.appendChild(img2);
+    btr.appendChild(bth3);
+    var bth4 = document.createElement('th');
+    bth4.width = "100px";
+    var img3 = document.createElement('img');
+    img3.src = "bin/glider.png";
+    bth4.appendChild(img3);
+    btr.appendChild(bth4);
+    tbl.appendChild(btr);
+    for(var i = 0; i < texts.length; i ++){
+        var tr = document.createElement('tr')
+        tr.height = "60px";
+        var th = document.createElement('th')
+        th.textContent = texts[i];
+        tr.appendChild(th)
+        var td = document.createElement('td');
+        var txt = document.createElement('p');
+        td.append(txt);
+        for(var j = 0; j < 3; j ++){
+            tr.appendChild(td);
+            if(j !== 2){
+                td = document.createElement('td');
+                txt = document.createElement('p');
+                td.append(txt);
+            }
+        }
+        tbl.appendChild(tr);
+    }
+    return(tbl);
+}
+
+var totals = [
+    [1, 1, 1],
+    [1, 1, 1],
+    [9, 7, 4],
+    [32, 26, 16]
+]
+
+var actuals = [
+    [1, 1, 1],
+    [1, 1, 1],
+    [9, 7, 4],
+    [32, 26, 16]
+]
+
+for(i = 1; i < 5; i ++){
+    for(j = 1; j < 4; j ++){
+        var div = document.createElement("div");
+        var node = document.createElement("input");
+        node.value = totals[i - 1][j - 1]
+        div.className = "numLeft";
+        var textNode = document.createElement("p");
+        textNode.innerHTML = "</div>&nbsp;/ " + totals[i - 1][j - 1];
+        div.appendChild(node);
+        div.appendChild(textNode);
+        inTbl.rows[i].cells[j].appendChild(div);
+
+    }
+}
+
+function factorial(a){
+    var res = 1;
+    for(var i = a; i >= 1; i --){
+        res *= i;
+    }
+    return res;
+}
+
+function combination(a, b){
+    return factorial(b) / (factorial(a) * factorial(b - a));
+}
+
+function getChance(x, y, v, s){
+    var num = 1;
+    for(var l = 0; l < x; l ++){
+        num *= (v - l);
+    }
+    var den = 1;
+    for(var l = 0; l < y - x; l ++){
+        num *= (s - v - l);
+    }
+    for(var l = 0; l < y; l ++){
+        den *= (s - l);
+    }
+    return combination(x, y) * num / den;
+}
+
+function edited(){
+    var expected = [[0, 0, 0],[0, 0, 0],[0, 0, 0],[0, 0, 0]];
+    var xfy = [];
+    var pulls = Math.abs(parseInt(document.getElementById("pulls").value));
+    var chose = Math.abs(parseInt(document.getElementById("chose").value));
+    chose = chose > pulls? pulls : chose;
+    console.log(pulls);
+    for(var i = -1; i < pulls; i ++){
+        xfy.push([[], [], [], []]);
+        var sum = 0;
+        for(var j = 1; j < 5; j ++){
+            for(var k = 1; k < 4; k ++){
+                actuals[j - 1][k - 1] = parseInt(inTbl.rows[j].cells[k].childNodes[0].childNodes[0].value);
+                sum += actuals[j - 1][k - 1];
+            }
+        }
+        for(var j = 1; j < 5; j ++){
+            for(var k = 1; k < 4; k ++){
+                var prob = getChance(i + 1, pulls, actuals[j - 1][k - 1], sum)
+                expected[j - 1][k - 1] += prob * (i + 1);
+                xfy[i + 1][j - 1][k - 1] = prob;
+            }
+        }
+    }
+    var tbl = document.getElementById("chances");
+    for(var j = 1; j < 5; j ++){
+        for(var k = 1; k < 4; k ++){
+            tbl.rows[j].cells[k].childNodes[0].textContent = expected[j - 1][k - 1].toFixed(3);
+        }
+    }
+    var tbl2 = document.getElementById("chances1");
+    console.log(tbl2.rows[0].cells[0]);
+    tbl2.rows[0].cells[0].textContent = "Odds of " + chose + " Reward" + (chose != 1 ? "s" : "");
+    for(var j = 1; j < 5; j ++){
+        for(var k = 1; k < 4; k ++){
+            tbl2.rows[j].cells[k].childNodes[0].textContent = (xfy[chose][j - 1][k - 1] * 100).toFixed(3) + "%";
+        }
+    }
+}
+
+//Guess this works... StackOverflow yes
+window.onload=(function(oldLoad){
+  return function(){
+    oldLoad && oldLoad();
+    edited();
+  }
+})(window.onload)
+</script>
+</html> 
