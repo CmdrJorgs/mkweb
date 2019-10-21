@@ -102,21 +102,27 @@ body {
 
 .inline {
     display: block;
-    width: 115px;
+    width: 250px;
 }
 
 .inline p {
     text-align: center;
+    width: 250px;
+    margin: 0 0 !important;
 }
 
 .inline p, .inline input {
     text-align: center;
     display: block !important;
-    margin: 0;
 }
 
 .inline input {
     margin: 0 auto !important;
     width: 50px;
     margin: 0 5px;
+}
+
+h2 {
+    margin: 0 auto;
+    text-align: center;
 }
