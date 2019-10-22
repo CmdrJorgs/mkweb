@@ -44,7 +44,7 @@
     </h2>
     <div class = "inBunch inline">
         <p>
-            See odds of exactly
+            See odds of at least
         </p>
         <br>
         <input type = "number" id = "chose" value = 1 onkeyup = "edited();"></input>
@@ -251,7 +251,12 @@ function edited(){
     tbl2.rows[0].cells[0].textContent = "Odds of " + chose + " Reward" + (chose != 1 ? "s" : "");
     for(var j = 1; j < 5; j ++){
         for(var k = 1; k < 5; k ++){
-            tbl2.rows[j].cells[k].childNodes[0].textContent = (xfy[chose][j - 1][k - 1] * 100).toFixed(3) + "%";
+            var sum = 0;
+            for(var l = xfy.length - 1; l >= chose; l --){
+                console.log(l);
+                sum += xfy[l][j - 1][k - 1];
+            }
+            tbl2.rows[j].cells[k].childNodes[0].textContent = (sum * 100).toFixed(3) + "%";
         }
     }
 }
