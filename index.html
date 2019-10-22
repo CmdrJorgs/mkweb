@@ -74,11 +74,10 @@ for(var i = 0; i < texts.length; i ++){
     th.textContent = texts[i];
     tr.appendChild(th);
     var td = document.createElement('td');
-    for(var j = 0; j < 4; j ++){
+    for(var j = 0; j < 3; j ++){
         tr.appendChild(td);
-        if(j !== 4){
+        if(j !== 3){
             td = document.createElement('td');
-            td.className = (j <= 2 ? "sub" : "main");
         }
     }
     inTbl.appendChild(tr);
